@@ -1,0 +1,154 @@
+
+#1.1 Conditional statements
+
+#1.1.1 sheldon game(player1, player2)
+sheldon_game<-function(player1, player2){
+  game<-c("rock","paper","scissors","spock","lizard")
+  p1<-0L
+  p2<-0L
+  for(i in 1:length(game)){
+    if(identical(player1,game[i]))
+      p1<-i
+    if(identical(player2,game[i]))
+      p2<-i
+  }
+  if(p1==0 && p2==0)
+    stop()
+  if(p1==p2)
+    return("Draw!")
+  if((p1+1)%%5==p2 || ((p2==1)&&(p1==3 || p1==5)) || (p2==2)&&(p1==4) || (p2==5)&&(p1==3) || (p2==4)&&(p1==1))
+    return("Player 2 wins!")
+  if((p2+1)%%5==p1 || ((p1==1)&&(p2==3 || p2==5)) || (p1==2)&&(p2==4) || (p1==5)&&(p2==3) || (p1==4)&&(p2==1))
+    return("Player 1 wins!")
+}
+
+#1.2 for loops
+
+#1.2.1 my moving median()
+my_moving_median<-function(x,n,...){
+  stopifnot(is.numeric(x) && is.numeric(n) && is.vector(x) && length(n)==1)
+  m<-vector(mode="numeric")
+  
+  for(i in 1:length(x)){
+    if(i+n>length(x))
+      break
+    
+    m<-c(m,median(x[i:(i+n)],...))
+  }
+  m
+}
+
+#1.2.2 for mult table()
+for_mult_table<-function(from,to){
+  mul_mat<-matrix(nrow=(to-from+1),ncol=(to-from+1))
+  rownames(mul_mat)<-from:to
+  colnames(mul_mat)<-from:to
+  for(i in 1:(to-from+1)){
+    for(j in 1:(to-from+1)){
+      mul_mat[i,j]<-(from+i-1)*(from+j-1)
+    }
+  }
+  mul_mat
+}
+
+#1.3 while loops
+
+#1.3.1 find cumsum()
+find_cumsum<-function(x,find_sum){
+  cum_sum<-0
+  i<-1
+  while(i<=length(x) && cum_sum<find_sum){
+    cum_sum<-x[i]+cum_sum
+    i<-i+1
+  }
+  cum_sum
+}
+
+#1.3.2 while mult table()
+while_mult_table<-function(from,to){
+  mul_mat<-matrix(nrow=(to-from+1),ncol=(to-from+1))
+  i<-1
+  while(i<=(to-from+1)){
+    j<-1
+    while(j<=(to-from+1)){
+      mul_mat[i,j]<-(from+i-1)*(from+j-1)
+      j<-j+1
+    }
+    i<-i+1
+  }
+  mul_mat
+}
+
+#1.3.3 * trial division factorization()
+trial_division_factorization<-function(x){
+  v<-vector(mode = "numeric")
+  f<-2
+  
+  while(x>1){
+    if(x%%f==0){
+      v<-c(v,f)
+      x<-x/f
+    }
+    else
+      f<-f+1
+  }
+  v
+}
+
+#1.4 repeat and loop controls
+
+#1.4.1 repeat find cumsum()
+repeat_find_cumsum<-function(x,find_sum){
+  cum_sum<-0
+  i<-1
+  
+  repeat{
+    cum_sum<-x[i]+cum_sum
+    i<-i+1
+    if(!(i<=length(x) && cum_sum<find_sum)) break
+  }
+  cum_sum
+}
+
+#1.4.2 repeat my moving median()
+repeat_my_moving_median<-function(x,n,...){
+  stopifnot(is.numeric(x) && is.numeric(n) && is.vector(x) && length(n)==1)
+  m<-vector(mode="numeric")
+  
+  i<-1
+  repeat{
+    if(i+n>length(x))
+      break
+    
+    m<-c(m,median(x[i:(i+n)],...))
+    i<-i+1
+  }
+  m
+}
+
+#1.5 Environment
+
+#1.5.1 in environment()
+in_environment<-function(env){
+  unlist(ls(env,all.names = TRUE))
+}
+
+#1.6 Functionals
+
+#1.6.1 cov()
+cov<-function(X){
+  stopifnot(is.data.frame(X))
+  
+  unlist(lapply(X, function(y) sd(y)/mean(y)))
+}
+
+#1.7 Closures
+
+#1.7.1 moment()
+moment<-function(i){
+  stopifnot(is.numeric(i))
+  
+  function(x){
+    return(sum(mean((x-mean(x))^i)))
+  }
+}
